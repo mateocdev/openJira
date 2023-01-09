@@ -12,19 +12,19 @@ const Entries_INITIAL_STATE: EntriesState = {
   entries: [
     {
       _id: uuidv4(),
-      description: "Next.js",
+      description: "In Progress: Next.js",
       status: "in progress",
       createdAt: Date.now(),
     },
     {
       _id: uuidv4(),
-      description: "React Native",
+      description: "Pending: React Native",
       status: "pending",
       createdAt: Date.now() - 1000000,
     },
     {
       _id: uuidv4(),
-      description: "Web3.0",
+      description: "Done: Web3.0",
       status: "done",
       createdAt: Date.now() - 10000000000,
     },
