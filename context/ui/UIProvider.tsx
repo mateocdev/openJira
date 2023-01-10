@@ -7,10 +7,12 @@ interface UIProviderProps {
 
 export interface UIState {
   sidemenuOpen: boolean;
+  formOpen: boolean;
 }
 
 const UI_INITIAL_STATE: UIState = {
   sidemenuOpen: false,
+  formOpen: false,
 };
 
 export const UIProvider: FC<UIProviderProps> = ({ children }) => {
@@ -24,6 +26,9 @@ export const UIProvider: FC<UIProviderProps> = ({ children }) => {
     dispatch({ type: "UI - Close Sidebar" });
   };
 
+  const setShowForm = (formOpen: boolean) => {
+    dispatch({ type: "UI - Show form", payload: formOpen });
+  };
   return (
     <UIContext.Provider
       value={{
@@ -31,6 +36,7 @@ export const UIProvider: FC<UIProviderProps> = ({ children }) => {
         //Methods
         openSideMenu,
         closeSideMenu,
+        setShowForm,
       }}
     >
       {children}
