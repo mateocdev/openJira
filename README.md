@@ -44,3 +44,8 @@ docker-compose up -d
 ```
 mongodb://localhost:27017/entriesdb
 ```
+
+* Configure .env variables
+```
+Configure on .env doc
+```
