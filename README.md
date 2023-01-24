@@ -49,3 +49,9 @@ mongodb://localhost:27017/entriesdb
 ```
 Configure on .env doc
 ```
+* Insert data into BD
+
+Call the endpoint:
+```
+http://localhost300/api/seed
+```
