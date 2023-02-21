@@ -22,7 +22,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 const getEntries = async(res: NextApiResponse<Data>) => {
     await db.connectToDatabase();
     const entries = await Entry.find().sort({ createdAt: 'ascending' });
-    await db.disconnectDatabase();
+    // await db.disconnectDatabase();
 
     return res.status(200).json(entries);
 }
