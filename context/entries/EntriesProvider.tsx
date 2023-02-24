@@ -15,12 +15,12 @@ const Entries_INITIAL_STATE: EntriesState = {
 export const EntriesProvider: FC = ({ children }: any) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
-  const addNewEntry = (description: string) => {
-    const resp = entriesApi.post<Entry>("/entries", { description });
+  const addNewEntry = async(description: string) => {
+    const { data } = await entriesApi.post<Entry>("/entries", { description });
 
     dispatch({
       type: "[Entries] Add-Entry",
-      payload: resp,
+      payload: data,
     });
   };
 
