@@ -40,7 +40,7 @@ export const EntriesProvider: FC = ({ children }: any) => {
   const refreshEntries = async () => {
     const { data } = (await entriesApi.get<Entry[]>("/entries")) || {};
     dispatch({
-      type: "[Entries] Entries-refreshed",
+      type: "[Entries] Refresh-Data",
       payload: data,
     });
   };
