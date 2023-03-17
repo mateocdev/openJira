@@ -1,4 +1,4 @@
-import { FC, useReducer, useEffect } from "react";
+import { FC, useEffect, useReducer } from "react";
 import { Entry } from "../../interfaces";
 import { EntriesContext, entriesReducer } from "./";
 
@@ -15,7 +15,7 @@ const Entries_INITIAL_STATE: EntriesState = {
 export const EntriesProvider: FC = ({ children }: any) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
-  const addNewEntry = async(description: string) => {
+  const addNewEntry = async (description: string) => {
     const { data } = await entriesApi.post<Entry>("/entries", { description });
 
     dispatch({
@@ -24,11 +24,19 @@ export const EntriesProvider: FC = ({ children }: any) => {
     });
   };
 
-  const updateEntry = (entry: Entry) => {
-    dispatch({
-      type: "[Entries] Entry-updated",
-      payload: entry,
-    });
+  const updateEntry = async ({ _id, description, status }: Entry) => {
+    try {
+      const { data } = await entriesApi.put<Entry>(`/entries/${_id}`, {
+        description: description,
+        status: status,
+      });
+      dispatch({
+        type: "[Entries] Entry-updated",
+        payload: data,
+      });
+    } catch ({ error }: any) {
+      console.log(error);
+    }
   };
 
   const refreshEntries = async () => {

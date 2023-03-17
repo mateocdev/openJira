@@ -23,10 +23,34 @@ export default function handler(
   switch (req.method) {
     case "PUT":
       return updateEntry(req, res);
+    case "GET":
+      return getEntry(req, res);
     default:
       return res.status(405).json({ message: "Method not allowed" });
   }
 }
+
+const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { id } = req.query;
+  await db.connectToDatabase();
+  const entry = await Entry.findById(id);
+
+  if (!entry) {
+    await db.disconnectDatabase();
+    return res.status(404).json({ message: "Entry not found" });
+  }
+
+  try {
+    const getEntry = await Entry.findById(id);
+    await db.disconnectDatabase();
+    res.status(200).json(getEntry!);
+  } catch (error: any) {
+    await db.disconnectDatabase();
+    return res
+      .status(400)
+      .json({ message: error.errors.status.message.toString() });
+  }
+};
 
 const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { id } = req.query;
@@ -57,8 +81,10 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
     await db.disconnectDatabase();
     res.status(200).json(updatedEntry!);
-  } catch ({ errors }: any) {
+  } catch (error: any) {
     await db.disconnectDatabase();
-    return res.status(400).json({ message: errors.status.message.toString() });
+    return res
+      .status(400)
+      .json({ message: error.errors.status.message.toString() });
   }
 };
