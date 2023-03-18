@@ -16,18 +16,42 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import { FC, useMemo, useState } from "react";
 import { Layout } from "../../components/layouts/Layout";
 import { EntryStatus } from "../../interfaces";
 
+import { isValidObjectId } from "mongoose";
+import { GetServerSideProps } from "next";
 const validStatus: EntryStatus[] = ["pending", "in-progress", "done"];
 
-export const EntryPage = () => {
+interface Props {
+  id: string;
+}
+
+export const EntryPage: FC = (props) => {
+  console.log({ props });
+  const [inputValue, setInputValue] = useState("");
+  const [status, setStatus] = useState("pending");
+  const [touched, setTouched] = useState(false);
+
+  const isNotValid = useMemo(
+    () => inputValue.length <= 0 && touched,
+    [inputValue, touched]
+  );
+
+  const onSave = () => {
+    console.log({ inputValue, status });
+  };
+
   return (
     <Layout title="Entry Page">
       <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
-            <CardHeader title="Exercise Control" subheader={`Create at:`} />
+            <CardHeader
+              title={`Exercise Control: ${inputValue}`}
+              subheader={`Create at:`}
+            />
             <CardContent>
               <TextField
                 sx={{ marginTop: 2, marginBottom: 2 }}
@@ -36,11 +60,20 @@ export const EntryPage = () => {
                 autoFocus
                 multiline
                 label="Entry"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                helperText={isNotValid && "This field is required"}
+                onBlur={() => setTouched(true)}
+                error={isNotValid && touched}
               />
 
               <FormControl>
                 <FormLabel>State:</FormLabel>
-                <RadioGroup row>
+                <RadioGroup
+                  row
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                >
                   {(validStatus || []).map((status) => (
                     <FormControlLabel
                       key={status}
@@ -57,6 +90,8 @@ export const EntryPage = () => {
                 startIcon={<SaveOutlinedIcon />}
                 variant="contained"
                 fullWidth
+                onClick={onSave}
+                disabled={isNotValid}
               >
                 {" "}
                 Save{" "}
@@ -78,6 +113,28 @@ export const EntryPage = () => {
       </IconButton>
     </Layout>
   );
+};
+
+// You should use getServerSideProps when:
+// - Only if you need to pre-render a page whose data must be fetched at request time
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+  const { id } = params as { id: string };
+
+  if (!isValidObjectId(id)) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {
+      id, // will be passed to the page component as props
+    },
+  };
 };
 
 export default EntryPage;
