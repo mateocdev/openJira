@@ -8,7 +8,7 @@ interface Props {
   children: any;
 }
 
-export const Layout: FC<Props> = ({ title = "OpenJira", children }) => {
+export const Layout: FC<Props> = ({ title = "GymTable", children }) => {
   return (
     <Box sx={{ flexFlow: 1 }}>
       <Head>
@@ -21,4 +21,3 @@ export const Layout: FC<Props> = ({ title = "OpenJira", children }) => {
     </Box>
   );
 };
-

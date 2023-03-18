@@ -1,11 +1,10 @@
-import { Box, Button, TextField } from "@mui/material";
-import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
+import { Box, Button, TextField } from "@mui/material";
 import { useContext, useState } from "react";
 import { EntriesContext } from "../../context/entries";
 import { UIContext } from "../../context/ui";
 export const NewEntry = () => {
-
   const [inputValue, setInputValue] = useState("");
 
   const [touched, setTouched] = useState(false);
@@ -13,7 +12,6 @@ export const NewEntry = () => {
   const { addNewEntry } = useContext(EntriesContext);
 
   const { setShowForm, formOpen } = useContext(UIContext);
-
 
   const onSave = () => {
     if (inputValue.length === 0) return;
@@ -30,15 +28,13 @@ export const NewEntry = () => {
           <TextField
             fullWidth
             sx={{ marginTop: 2, marginBottom: 1 }}
-            placeholder="Nueva entrada"
+            placeholder="New exercise"
             autoFocus
             multiline
             helperText={
-              touched && inputValue.length === 0
-                ? "El campo no puede estar vacío"
-                : ""
+              touched && inputValue.length === 0 ? "This field is required" : ""
             }
-            label="Nueva entrada"
+            label="New exercise"
             error={touched && inputValue.length === 0}
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
@@ -54,7 +50,7 @@ export const NewEntry = () => {
               }}
               variant="outlined"
             >
-              Cancelar
+              Cancel
             </Button>
             <Button
               variant="outlined"
@@ -62,7 +58,7 @@ export const NewEntry = () => {
               endIcon={<SaveOutlinedIcon />}
               onClick={onSave}
             >
-              Guardar
+              Save
             </Button>
           </Box>
         </>
@@ -73,7 +69,7 @@ export const NewEntry = () => {
           variant="outlined"
           onClick={() => setShowForm(true)}
         >
-          Agregar nueva entrada
+          Add new exercise 💪
         </Button>
       )}
     </Box>
