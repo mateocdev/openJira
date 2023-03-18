@@ -14,12 +14,11 @@ interface Props {
 }
 
 export const EntryCard: FC<Props> = ({ entry }) => {
-
-
   const { setDragging } = useContext(UIContext);
+  const { _id = "", description } = entry || {};
 
   const onDragStart = (e: React.DragEvent<HTMLDivElement>) => {
-    e.dataTransfer.setData("text/plain", entry._id);
+    e.dataTransfer.setData("text/plain", _id);
     setDragging(true);
   };
 
@@ -28,7 +27,6 @@ export const EntryCard: FC<Props> = ({ entry }) => {
     setDragging(false);
   };
 
-  const { description } = entry;
   return (
     <Card sx={{ marginBottom: 1 }} draggable onDragStart={onDragStart}>
       <CardActionArea>
