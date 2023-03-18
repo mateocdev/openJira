@@ -5,8 +5,7 @@ import { NextResponse } from "next/server";
 // This function can be marked `async` if using `await` inside
 export function middleware(req: NextRequest) {
   if (req.nextUrl.pathname.startsWith("/api/entries/")) {
-    const id = req.nextUrl.pathname.split("/").pop();
-    console.log({ id });
+    const id = req.nextUrl.pathname.split("/").pop() || "";
     const checkMongoIDRegex = new RegExp("^[0-9a-fA-F]{24}$");
     if (!checkMongoIDRegex.test(id)) {
       const url = req.nextUrl.clone();
