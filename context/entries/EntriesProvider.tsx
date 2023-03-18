@@ -12,7 +12,7 @@ const Entries_INITIAL_STATE: EntriesState = {
   entries: [],
 };
 
-export const EntriesProvider: FC = ({ children }: any) => {
+export const EntriesProvider = ({ children }: any) => {
   const [state, dispatch] = useReducer(entriesReducer, Entries_INITIAL_STATE);
 
   const addNewEntry = async (description: string) => {
