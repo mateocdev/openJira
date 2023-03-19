@@ -20,8 +20,9 @@ import { FC, useMemo, useState } from "react";
 import { Layout } from "../../components/layouts/Layout";
 import { Entry, EntryStatus } from "../../interfaces";
 
-import { isValidObjectId } from "mongoose";
 import { GetServerSideProps } from "next";
+import { useContext } from "react";
+import { EntriesContext } from "../../context/entries";
 import { dbEntries } from "../../database";
 const validStatus: EntryStatus[] = ["pending", "in-progress", "done"];
 
@@ -30,10 +31,17 @@ interface Props {
 }
 
 export const EntryPage: FC<Props> = ({ entry }) => {
-  const { description, status: statusEntry, createdAt } = entry;
+  const {
+    description = "",
+    status: statusEntry = "pending",
+    createdAt = "",
+  } = entry || {};
+
   const [inputValue, setInputValue] = useState(description);
   const [status, setStatus] = useState(statusEntry);
   const [touched, setTouched] = useState(false);
+
+  const { updateEntry } = useContext(EntriesContext);
 
   const isNotValid = useMemo(
     () => inputValue.length <= 0 && touched,
@@ -41,7 +49,13 @@ export const EntryPage: FC<Props> = ({ entry }) => {
   );
 
   const onSave = () => {
-    console.log({ inputValue, status });
+    if (inputValue.trim().length === 0) return;
+    const updatedEntry: Entry = {
+      ...entry,
+      status,
+      description: inputValue,
+    };
+    updateEntry(updatedEntry, true);
   };
 
   return (
@@ -73,7 +87,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
                 <RadioGroup
                   row
                   value={status}
-                  onChange={(e) => setStatus(e.target.value)}
+                  onChange={(e) => setStatus(e.target.value as EntryStatus)}
                 >
                   {(validStatus || []).map((status) => (
                     <FormControlLabel
