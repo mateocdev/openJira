@@ -18,20 +18,21 @@ import {
 } from "@mui/material";
 import { FC, useMemo, useState } from "react";
 import { Layout } from "../../components/layouts/Layout";
-import { EntryStatus } from "../../interfaces";
+import { Entry, EntryStatus } from "../../interfaces";
 
 import { isValidObjectId } from "mongoose";
 import { GetServerSideProps } from "next";
+import { dbEntries } from "../../database";
 const validStatus: EntryStatus[] = ["pending", "in-progress", "done"];
 
 interface Props {
-  id: string;
+  entry: Entry;
 }
 
-export const EntryPage: FC = (props) => {
-  console.log({ props });
-  const [inputValue, setInputValue] = useState("");
-  const [status, setStatus] = useState("pending");
+export const EntryPage: FC<Props> = ({ entry }) => {
+  const { description, status: statusEntry, createdAt } = entry;
+  const [inputValue, setInputValue] = useState(description);
+  const [status, setStatus] = useState(statusEntry);
   const [touched, setTouched] = useState(false);
 
   const isNotValid = useMemo(
@@ -44,13 +45,13 @@ export const EntryPage: FC = (props) => {
   };
 
   return (
-    <Layout title="Entry Page">
+    <Layout title={inputValue.substring(0, 20) + "..."}>
       <Grid container justifyContent="center" sx={{ marginTop: 2 }}>
         <Grid item xs={12} sm={8} md={6}>
           <Card>
             <CardHeader
-              title={`Exercise Control: ${inputValue}`}
-              subheader={`Create at:`}
+              title={`Exercise Control:`}
+              subheader={`Create at: ${createdAt}`}
             />
             <CardContent>
               <TextField
@@ -121,7 +122,9 @@ export const EntryPage: FC = (props) => {
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const { id } = params as { id: string };
 
-  if (!isValidObjectId(id)) {
+  const entry = await dbEntries.getEntryById(id);
+
+  if (!entry) {
     return {
       redirect: {
         destination: "/",
@@ -132,7 +135,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 
   return {
     props: {
-      id, // will be passed to the page component as props
+      entry, // will be passed to the page component as props
     },
   };
 };
