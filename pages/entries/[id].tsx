@@ -20,6 +20,7 @@ import { FC, useMemo, useState } from "react";
 import { Layout } from "../../components/layouts/Layout";
 import { Entry, EntryStatus } from "../../interfaces";
 
+import { format } from "date-fns";
 import { GetServerSideProps } from "next";
 import { useContext } from "react";
 import { EntriesContext } from "../../context/entries";
@@ -34,7 +35,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
   const {
     description = "",
     status: statusEntry = "pending",
-    createdAt = "",
+    createdAt = Date.now(),
   } = entry || {};
 
   const [inputValue, setInputValue] = useState(description);
@@ -65,7 +66,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
           <Card>
             <CardHeader
               title={`Exercise Control:`}
-              subheader={`Create at: ${createdAt}`}
+              subheader={`Create at: ${format(createdAt, "MM/dd/yyyy")}`}
             />
             <CardContent>
               <TextField

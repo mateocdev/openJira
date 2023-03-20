@@ -5,6 +5,7 @@ import {
   CardContent,
   Typography,
 } from "@mui/material";
+import { format } from "date-fns";
 import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { UIContext } from "../../context/ui";
@@ -46,7 +47,9 @@ export const EntryCard: FC<Props> = ({ entry }) => {
         <CardActions
           sx={{ display: "flex", justifyContent: "end", paddingRight: "2" }}
         >
-          <Typography variant="body2">Hace 30 mins</Typography>
+          <Typography variant="body2">
+            Create at: {format(entry.createdAt, "dd/MM/yyyy")}
+          </Typography>
         </CardActions>
       </CardActionArea>
     </Card>
