@@ -42,7 +42,6 @@ const getEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   try {
     const getEntry = await Entry.findById(id);
-    await db.disconnectDatabase();
     res.status(200).json(getEntry!);
   } catch (error: any) {
     await db.disconnectDatabase();
@@ -79,7 +78,6 @@ const updateEntry = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         runValidators: true,
       }
     );
-    await db.disconnectDatabase();
     res.status(200).json(updatedEntry!);
   } catch (error: any) {
     await db.disconnectDatabase();
