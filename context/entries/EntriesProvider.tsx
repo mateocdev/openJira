@@ -1,8 +1,8 @@
-import { FC, useEffect, useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { Entry } from "../../interfaces";
 import { EntriesContext, entriesReducer } from "./";
 
-import { SnackbarProvider, useSnackbar } from "notistack";
+import { useSnackbar } from "notistack";
 import { entriesApi } from "../../apis";
 
 export interface EntriesState {
@@ -51,6 +51,25 @@ export const EntriesProvider = ({ children }: any) => {
     }
   };
 
+  const deleteEntry = async ({ _id }: Entry, showSnackBar = false) => {
+    try {
+      const { data } = await entriesApi.delete<Entry>(`/entries/${_id}`);
+      if (showSnackBar) {
+        enqueueSnackbar("Entry deleted", {
+          variant: "error",
+          autoHideDuration: 1500,
+          anchorOrigin: { vertical: "top", horizontal: "right" },
+        });
+      }
+      dispatch({
+        type: "[Entries] Entry-deleted",
+        payload: data,
+      });
+    } catch ({ error }: any) {
+      console.log(error);
+    }
+  };
+
   const refreshEntries = async () => {
     const { data } = (await entriesApi.get<Entry[]>("/entries")) || {};
     dispatch({
@@ -70,6 +89,7 @@ export const EntriesProvider = ({ children }: any) => {
         //Methods
         addNewEntry,
         updateEntry,
+        deleteEntry,
       }}
     >
       {children}

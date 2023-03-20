@@ -22,6 +22,7 @@ import { Entry, EntryStatus } from "../../interfaces";
 
 import { format } from "date-fns";
 import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
 import { useContext } from "react";
 import { EntriesContext } from "../../context/entries";
 import { dbEntries } from "../../database";
@@ -32,6 +33,7 @@ interface Props {
 }
 
 export const EntryPage: FC<Props> = ({ entry }) => {
+  const router = useRouter();
   const {
     description = "",
     status: statusEntry = "pending",
@@ -42,7 +44,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
   const [status, setStatus] = useState(statusEntry);
   const [touched, setTouched] = useState(false);
 
-  const { updateEntry } = useContext(EntriesContext);
+  const { updateEntry, deleteEntry } = useContext(EntriesContext);
 
   const isNotValid = useMemo(
     () => inputValue.length <= 0 && touched,
@@ -57,6 +59,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
       description: inputValue,
     };
     updateEntry(updatedEntry, true);
+    router.push("/");
   };
 
   return (
@@ -124,6 +127,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
           right: 30,
           backgroundColor: "error.dark",
         }}
+        onClick={() => deleteEntry(entry, true)}
       >
         <DeleteOutlinedIcon />
       </IconButton>

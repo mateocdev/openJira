@@ -5,6 +5,7 @@ type EntriesActionType =
   | { type: "[Entries] Add-Entry"; payload: Entry }
   | { type: "[Entries] Entry-updated"; payload: Entry }
   | { type: "[Entries] Refresh-Data"; payload: Entry[] }
+  | { type: "[Entries] Entry-deleted"; payload: Entry };
 
 export const entriesReducer = (
   state: EntriesState,
@@ -27,6 +28,12 @@ export const entriesReducer = (
           }
           return entry;
         }),
+      };
+
+    case "[Entries] Entry-deleted":
+      return {
+        ...state,
+        entries: [...state.entries],
       };
 
     case "[Entries] Refresh-Data":
