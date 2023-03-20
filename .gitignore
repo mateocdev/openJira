@@ -3,4 +3,5 @@ node_modules
 .yarn-integrity
 
 mongo/
+.env
 .vercel
